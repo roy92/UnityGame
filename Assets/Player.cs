@@ -24,10 +24,18 @@ public class Player : MonoBehaviour
     public int diamonds = 0;
     public UnityEvent<Player> OnDiamondCollected;
 
+    public int maxHealth = 100;
+    public int currentHealth;
+
+    public HealthBar healthBar;
+
+
     void Start()
     {
         skeleton = GetComponent<Rigidbody>();
         Guard.OnGuardHasSpottedPlayer += Disable;
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     // Update is called once per frame
@@ -50,6 +58,11 @@ public class Player : MonoBehaviour
         angle = Mathf.LerpAngle(angle, targetAngle, Time.deltaTime * turnSpeed * inputPressed);
 
         velocity = transform.forward * moveSpeed * smoothInputPressed;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(20);
+        }
     }
     //trigger to see if the player has reached the end point, then disable movement
     void OnTriggerEnter(Collider hitCollider)
@@ -105,5 +118,12 @@ public class Player : MonoBehaviour
     {
         //calls this method when player is destroyed, for example if the scene has changed etc
         Guard.OnGuardHasSpottedPlayer -= Disable;
+    }
+
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        healthBar.SetHealth(currentHealth);
     }
 }
