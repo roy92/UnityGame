@@ -6,6 +6,17 @@ using UnityEngine.AI;
 public class EnemyManager : MonoBehaviour
 {
     public GameObject player;
+    public float health = 100f;
+    public bool followPlayer = true;
+
+    public void Hit(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -16,7 +27,10 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<NavMeshAgent>().destination = player.transform.position;
+        if (followPlayer)
+        {
+            GetComponent<NavMeshAgent>().destination = player.transform.position;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
